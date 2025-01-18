@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strings"
 )
 
 func main() {
@@ -38,8 +39,8 @@ Best regards,
 
 		inputs = append(inputs, text)
 	}
-	for i, v := range inputs {
-		fmt.Println(matches[i][1], ":", v)
+	for idx, val := range inputs {
+		coverLetter = strings.Replace(coverLetter, matches[idx][0], val, 1)
 	}
-
+	fmt.Println(coverLetter)
 }
