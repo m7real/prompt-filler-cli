@@ -25,20 +25,36 @@ Thank you for your time and consideration. I look forward to discussing [topic o
 Best regards,  
 [Your Name]`
 
+	// finding placeholders
 	re := regexp.MustCompile(`\[(.*?)\]`)
-
 	matches := re.FindAllStringSubmatch(coverLetter, -1)
 
+	// getting user inputs
 	var inputs []string
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for _, match := range matches {
-		fmt.Println(match[1], ":")
-		scanner.Scan()
-		text := scanner.Text()
+		input := ""
 
-		inputs = append(inputs, text)
+		for input == "" { // keep asking until valid input
+			fmt.Println(match[1], ":")
+			scanner.Scan()
+			input = strings.TrimSpace(scanner.Text())
+			if input == "" {
+				fmt.Println("Input cannot be empty. Please try again.")
+			}
+		}
+
+		inputs = append(inputs, input)
 	}
+
+	// checks for errors during scanning
+	if err := scanner.Err(); err != nil {
+		fmt.Fprintln(os.Stderr, "Error reading input", err)
+		os.Exit(1)
+	}
+
+	// replacing placeholders, printing final output
 	for idx, val := range inputs {
 		coverLetter = strings.Replace(coverLetter, matches[idx][0], val, 1)
 	}
