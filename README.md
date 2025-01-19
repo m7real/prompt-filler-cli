@@ -15,11 +15,32 @@ Prompt Filler CLI is a command-line interface tool written in Go that helps user
 
 ## Installation
 
-- This will be updated later, please stay tuned.
+1. Make sure you have Go installed on your system. If not, you can download it from [golang.org](https://golang.org/doc/install).
+2. Clone the repository:
+
+   ```bash
+   git clone https://github.com/m7real/prompt-filler-cli.git
+   ```
+
+3. Navigate to the project directory:
+
+   ```bash
+   cd prompt-filler-cli
+   ```
+
+4. Build the executable:
+
+   ```bash
+   go build
+   ```
 
 ## Usage
 
-- This will be updated later, please stay tuned.
+1. Run the CLI tool using the executable
+
+2. Follow the prompts to paste the template and fill in each placeholder.
+
+3. The completed template will be printed to the console.
 
 ## Example
 
@@ -35,3 +56,7 @@ I am interested in the [Position] position at [Company Name].
 ```
 
 The CLI will prompt you for each placeholder, and upon completion, output the filled version.
+
+## Contributing
+
+Contributions are welcome! Please fork the repository and submit a pull request for any bug fixes or enhancements.

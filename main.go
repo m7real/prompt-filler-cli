@@ -86,11 +86,16 @@ func displayResult(s string) {
 func main() {
 
 	tempStr := readTemplate()
-	matches := extractPlaceholders(tempStr)
-	inputs := getUserInput(matches)
+	if strings.TrimSpace(tempStr) != "" {
+		matches := extractPlaceholders(tempStr)
+		inputs := getUserInput(matches)
 
-	tempStr = replacePlaceholders(tempStr, matches, inputs)
+		tempStr = replacePlaceholders(tempStr, matches, inputs)
 
-	displayResult(tempStr)
+		displayResult(tempStr)
+
+	} else {
+		fmt.Println("Your prompt has no placeholder, Thank You for using our application")
+	}
 
 }
