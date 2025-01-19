@@ -8,36 +8,48 @@ import (
 	"strings"
 )
 
-func main() {
-	coverLetter := `
-[Your Name]  
-[Your Address]  
-[City, State, ZIP]  
-[Your Email Address]  
-[Your Phone Number]  
+// Function to read a multi-line template from user input
+func readTemplate() string {
+	fmt.Println("Enter your prompt (type END on a new line to finish):")
 
-Dear [Recipient's Name],  
+	scanner := bufio.NewScanner(os.Stdin)
+	var builder strings.Builder
 
-I hope this message finds you well. I am reaching out regarding [specific purpose or topic]. With my background in [relevant skills or field], I believe I can [specific contribution or goal].  
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.TrimSpace(line) == "END" {
+			break
+		}
+		builder.WriteString(line + "\n")
+	}
 
-Thank you for your time and consideration. I look forward to discussing [topic or opportunity] further.  
+	// checks for errors during scanning
+	if err := scanner.Err(); err != nil {
+		fmt.Fprintln(os.Stderr, "Error reading input", err)
+		os.Exit(1)
+	}
 
-Best regards,  
-[Your Name]`
+	return builder.String()
+}
 
-	// finding placeholders
+// function to extract placeholders
+func extractPlaceholders(s string) [][]string {
 	re := regexp.MustCompile(`\[(.*?)\]`)
-	matches := re.FindAllStringSubmatch(coverLetter, -1)
+	return re.FindAllStringSubmatch(s, -1)
 
-	// getting user inputs
+}
+
+// function to get user inputs for the placeholders
+func getUserInput(placeholders [][]string) []string {
 	var inputs []string
 	scanner := bufio.NewScanner(os.Stdin)
 
-	for _, match := range matches {
+	for _, placeholder := range placeholders {
 		input := ""
 
 		for input == "" { // keep asking until valid input
-			fmt.Println(match[1], ":")
+			fmt.Println(placeholder[1], ":")
+
 			scanner.Scan()
 			input = strings.TrimSpace(scanner.Text())
 			if input == "" {
@@ -54,9 +66,31 @@ Best regards,
 		os.Exit(1)
 	}
 
-	// replacing placeholders, printing final output
+	return inputs
+}
+
+// Function to replace placeholders with user inputs
+func replacePlaceholders(s string, placeholders [][]string, inputs []string) string {
 	for idx, val := range inputs {
-		coverLetter = strings.Replace(coverLetter, matches[idx][0], val, 1)
+		s = strings.Replace(s, placeholders[idx][0], val, 1)
 	}
-	fmt.Println(coverLetter)
+	return s
+}
+
+func displayResult(s string) {
+	fmt.Println("Filled prompt:\n\n", s)
+	fmt.Println("\n\n --------Press enter to exit--------")
+	fmt.Scanln()
+}
+
+func main() {
+
+	tempStr := readTemplate()
+	matches := extractPlaceholders(tempStr)
+	inputs := getUserInput(matches)
+
+	tempStr = replacePlaceholders(tempStr, matches, inputs)
+
+	displayResult(tempStr)
+
 }
